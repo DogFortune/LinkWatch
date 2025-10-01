@@ -17,6 +17,7 @@ def test_check_link(url: str, expected_result: bool, expected_status_code: int):
     assert type(res) is dict
     assert res["result"] == expected_result
     assert res["code"] == expected_status_code
+    assert res["url"] == url
 
 
 def test_extract_link():
