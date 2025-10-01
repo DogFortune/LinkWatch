@@ -62,7 +62,7 @@ jobs:
       - name: install packages
         run: pipenv sync --dev
       - name: Cache Docker images.
-        uses: ScribeMD/docker-cache@0.5.0
+        uses: AndreKurait/docker-cache@0.6.0
         with:
           key: ${{ hashFiles('docker-compose.yml') }}
       - name: start docker compose
