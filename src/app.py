@@ -36,6 +36,9 @@ def lookup_file(path: str, filter="*.md"):
 def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("src")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--verbose", action="store_true", help="Increase verbosity")
+    group.add_argument("--quiet", action="store_true", help="Decrease verbosity")
     return parser
 
 

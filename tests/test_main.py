@@ -20,8 +20,7 @@ def test_check_link(url: str, expected_result: bool, expected_status_code: int):
 
 
 def test_extract_link():
-    # ファイルからリンクを抽出するテスト。主にリンクの数、重複したリンクがない事を保証します。
-
+    # ファイルからリンクを抽出するテスト。リンクの数、重複したリンクがない事をテストします。
     # TODO: 重複チェックはまだできていない。
     file_list = app.lookup_file("tests/doc/")
     links = app.extract_link(file_list[0])
