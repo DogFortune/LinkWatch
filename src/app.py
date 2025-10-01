@@ -14,15 +14,17 @@ def check_link(url: str):
         return {"result": False, "code": e.code, "url": e.url}
 
 
-def extract_link(file_path: str):
+def extract_link(files: list):
     links = []
-    # 指定したファイルからリンクを抽出します。重複はこの時点で除外しますが、ファイルをまたいだリンクの重複チェックはしない。
     # 欲しいのはファイル名と行数とリンク
-    with open(file_path, "r") as f:
-        lines = f.readlines()
-        for i, line in enumerate(lines):
-            if "http" in line:
-                links.append({"line": i + 1, "link": line})
+    for file_path in files:
+        with open(file_path, "r") as f:
+            lines = f.readlines()
+            item = {"filePath": file_path, "data": []}
+            for i, line in enumerate(lines):
+                if "http" in line:
+                    item["data"].append({"line": i + 1, "link": line})
+        links.append(item)
     return links
 
 

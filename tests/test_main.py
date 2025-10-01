@@ -1,5 +1,27 @@
 import app
 import pytest
+from pprint import pprint as pp
+
+
+class TestExtractLink:
+    def test_extract_link(self):
+        # ファイルからリンクを抽出するテスト。対象のドキュメントすべてのリンクを抽出する。
+        # 重複リンクにはフラグをつける。
+        files = app.lookup_file("tests/doc/")
+        links = app.extract_link(files)
+
+        assert len(links) == 2
+
+        item = links[0]
+
+        assert "filePath" in item
+        assert "data" in item
+        assert type(item["data"]) is list
+
+        data = item["data"][0]
+
+        assert "line" in data
+        assert "link" in data
 
 
 @pytest.mark.parametrize(
@@ -17,17 +39,6 @@ def test_check_link(url: str, expected_result: bool, expected_status_code: int):
     assert res["result"] == expected_result
     assert res["code"] == expected_status_code
     assert res["url"] == url
-
-
-def test_extract_link():
-    # ファイルからリンクを抽出するテスト。リンクの数、重複したリンクがない事をテストします。
-    # TODO: 重複チェックはまだできていない。
-    file_list = app.lookup_file("tests/doc/")
-    links = app.extract_link(file_list[0])
-    assert len(links) == 1
-
-    links = app.extract_link(file_list[1])
-    assert len(links) == 2
 
 
 @pytest.mark.parametrize(["path"], [pytest.param("tests/doc/")])
