@@ -4,7 +4,7 @@ from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 
 
-def check_link(url: str):
+def request(url: str):
     try:
         res = urlopen(url, timeout=5)
         return {"result": True, "code": res.code, "url": res.url}
@@ -16,10 +16,30 @@ def check_link(url: str):
         return {"result": False, "code": None, "url": url, "reason": e.reason}
 
 
-def extract_link(files: list):
+def check_links(links: dict) -> list:
+    # リンクをチェックします。
+    # チェックすべきなのはFalseのものだけ。
+    results = []
+    for file_path, link_items in links.items():
+        for item in link_items:
+            if not item["duplicate"]:
+                res = request(item["link"])
+                data = {
+                    "file": file_path,
+                    "line": item["line"],
+                    "link": item["link"],
+                    "result": res["result"],
+                    "code": res["code"],
+                }
+                if "reason" in res:
+                    data["reason"] = res["reason"]
+                results.append(data)
+    return results
+
+
+def extract_link(files: list) -> dict:
     # 各ファイルからリンクを抽出します。
     # 重複しているリンクはフラグがTrueになります。
-    # チェックすべきなのはこのフラフが
     links = {}
     seen_urls = set()
     for file_path in files:
@@ -60,7 +80,8 @@ def main(args=None):
     parser = create_parser()
     parsed_args = parser.parse_args(args)
     files = lookup_file(parsed_args.src)
-    return files
+    links = extract_link(files)
+    result = check_links(links)
 
 
 if __name__ == "__main__":

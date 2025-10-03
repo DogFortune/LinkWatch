@@ -3,10 +3,19 @@ import pytest
 from pprint import pprint as pp
 
 
+class TestCheckLins:
+    def test_check_links(self):
+        files = app.lookup_file("tests/doc/")
+        links = app.extract_link(files)
+        result = app.check_links(links)
+
+        pp(result)
+
+
 class TestExtractLink:
     def test_extract_link(self):
         # ファイルからリンクを抽出するテスト。対象のドキュメントすべてのリンクを抽出する。
-        # 重複リンクにはフラグをつける。2つ目移行はFalseになるのでTrueのものだけリンクチェックすればOK
+        # 重複リンクにはフラグをつける。2つ目以降はFalseになるのでTrueのものだけリンクチェックすればOK
         files = app.lookup_file("tests/doc/")
         links = app.extract_link(files)
 
@@ -38,16 +47,20 @@ class TestExtractLink:
         pytest.param("http://127.0.0.1:800", False, None),
     ],
 )
-def test_check_link(url: str, expected_result: bool, expected_status_code: int):
+def test_request(url: str, expected_result: bool, expected_status_code: int):
     # アクセスチェックした時に想定しているリクエストが返ってくる事。
     # 200系だけTrueで、それ以外はFalseで返ってくる事。
     # URLErrorが発生した（レスポンスが無く、そもそも接続できなかった）場合はFalseでステータスコードがNoneとなる事。
-    res = app.check_link(url)
+    res = app.request(url)
+
+    pp(res)
 
     assert type(res) is dict
     assert res["result"] == expected_result
     assert res["code"] == expected_status_code
     assert res["url"] == url
+    if not res["result"]:
+        assert "reason" in res
 
 
 @pytest.mark.parametrize(["path"], [pytest.param("tests/doc/")])
@@ -57,4 +70,4 @@ def test_check(path: str):
 
 
 def test_main():
-    res = app.main(["tests/doc/"])
+    app.main(["tests/doc/"])
