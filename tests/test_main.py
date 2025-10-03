@@ -15,6 +15,8 @@ class TestCheckLins:
 class TestExtractLink:
     def test_extract_link(self):
         # ファイルからリンクを抽出するテスト。対象のドキュメントすべてのリンクを抽出する。
+        # データ構造としてはdictのKeyにファイルのパス、Valueにリンクに関する情報が入っている。
+        # これは1ファイルの中に大量のリンクがあった時、すべてがフラットなリストだとファイル名を1つ1つ持つ事になるのでデータ量が増えてしまう。ファイル名は値として重複しやすいので、Keyという形で1つにまとめたのが理由。
         # 重複リンクにはフラグをつける。2つ目以降はFalseになるのでTrueのものだけリンクチェックすればOK
         files = app.lookup_file("tests/doc/")
         links = app.extract_link(files)
@@ -34,8 +36,8 @@ class TestExtractLink:
         # ちゃんと重複判定の数が正しいか、重複と見なしたリンクは想定しているものか
         duplicated_link_list = [item for item in doc2_result if item["duplicate"]]
         assert len(duplicated_link_list) == 2
-        assert duplicated_link_list[0]["link"] == duplicated_link_list[1]["link"]
-        assert duplicated_link_list[0]["link"] == "https://example.com"
+        assert duplicated_link_list[0]["url"] == duplicated_link_list[1]["url"]
+        assert duplicated_link_list[0]["url"] == "https://example.com"
 
 
 @pytest.mark.parametrize(

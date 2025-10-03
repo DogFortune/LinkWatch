@@ -23,11 +23,11 @@ def check_links(links: dict) -> list:
     for file_path, link_items in links.items():
         for item in link_items:
             if not item["duplicate"]:
-                res = request(item["link"])
+                res = request(item["url"])
                 data = {
                     "file": file_path,
                     "line": item["line"],
-                    "link": item["link"],
+                    "url": item["url"],
                     "result": res["result"],
                     "code": res["code"],
                 }
@@ -55,7 +55,7 @@ def extract_link(files: list) -> dict:
                         duplicate = False
                         seen_urls.add(url)
                     links[f"{file_path}"].append(
-                        {"line": i + 1, "link": url, "duplicate": duplicate}
+                        {"line": i + 1, "url": url, "duplicate": duplicate}
                     )
     return links
 
