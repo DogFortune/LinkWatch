@@ -9,7 +9,22 @@ class TestCheckLins:
         links = app.extract_link(files)
         result = app.check_links(links)
 
-        pp(result)
+        # 重複しているリンクは結果に含まれていない事（ドキュメントに記載されているリンクの数 - 重複しているリンクの数になっている事）
+        assert len(result) == 3
+
+        # 形式チェック
+        for item in result:
+            assert "file" in item and item["file"] is not None
+            assert "line" in item and item["line"] is not None
+            assert "url" in item and item["url"] is not None
+            assert "result" in item and item["result"] is not None
+            assert "code" in item
+
+            if item["result"].upper() == "OK":
+                assert item["code"] is not None
+            else:
+                assert item["code"] is None
+                assert "reason" in item and item["reason"] is not None
 
 
 class TestExtractLink:
@@ -54,8 +69,6 @@ def test_request(url: str, expected_result: str, expected_status_code: int):
     # 200系だけTrueで、それ以外はFalseで返ってくる事。
     # URLErrorが発生した（レスポンスが無く、そもそも接続できなかった）場合はFalseでステータスコードがNoneとなる事。
     res = app.request(url)
-
-    pp(res)
 
     assert type(res) is dict
     assert res["result"] == expected_result
