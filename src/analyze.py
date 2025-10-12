@@ -2,37 +2,63 @@ from pathlib import Path
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 from enums import Result
+import dataclasses
 
 
-def request(url: str):
+@dataclasses.dataclass
+class AnalyzeResult:
+    """ドキュメントの解析結果"""
+
+    file: str
+    line: int
+    url: str
+    result: str
+    code: int
+    reason: str
+
+
+@dataclasses.dataclass
+class AnalyzeResponse:
+    """リンクにアクセスした結果"""
+
+    result: Result
+    code: str | None
+    url: str
+    reason: str | None
+
+
+@dataclasses.dataclass
+class LinkInfo:
+    """ドキュメントから抽出したリンク情報"""
+
+    line: int
+    url: str
+    duplicate: bool
+
+
+def request(url: str) -> AnalyzeResponse:
     try:
         res = urlopen(url, timeout=5)
-        return {"result": Result.OK, "code": res.code, "url": res.url}
+        return AnalyzeResponse(Result.OK, res.code, res.url, None)
     except HTTPError as e:
         # アクセスできて400や500系が来た時はこっち
-        return {"result": Result.NG, "code": e.code, "url": url, "reason": e.reason}
+        return AnalyzeResponse(Result.NG, e.code, url, e.reason)
     except URLError as e:
         # そもそもアクセスすらできなかった場合はこっち
-        return {"result": Result.NG, "code": None, "url": url, "reason": e.reason}
+        return AnalyzeResponse(Result.NG, None, url, e.reason)
 
 
-def check_links(links: dict) -> list:
+def check_links(links: dict[str, LinkInfo]) -> list[AnalyzeResult]:
     # リンクをチェックします。
     # チェックすべきなのはFalseのものだけ。
     results = []
     for file_path, link_items in links.items():
         for item in link_items:
-            if not item["duplicate"]:
-                res = request(item["url"])
-                data = {
-                    "file": file_path,
-                    "line": item["line"],
-                    "url": item["url"],
-                    "result": res["result"],
-                    "code": res["code"],
-                }
-                if "reason" in res:
-                    data["reason"] = res["reason"]
+            if not item.duplicate:
+                res = request(item.url)
+                data = AnalyzeResult(
+                    file_path, item.line, item.url, res.result, res.code, res.reason
+                )
                 results.append(data)
     return results
 
@@ -44,7 +70,7 @@ def search(path: str, filter="*.md"):
     return files
 
 
-def extract_link(files: list) -> dict:
+def extract_link(files: list) -> dict[str, LinkInfo]:
     # 各ファイルからリンクを抽出します。
     # 重複しているリンクはフラグがTrueになります。
     links = {}
@@ -61,7 +87,6 @@ def extract_link(files: list) -> dict:
                     else:
                         duplicate = False
                         seen_urls.add(url)
-                    links[f"{file_path}"].append(
-                        {"line": i + 1, "url": url, "duplicate": duplicate}
-                    )
+                    data = LinkInfo(i + 1, url, duplicate)
+                    links[f"{file_path}"].append(data)
     return links

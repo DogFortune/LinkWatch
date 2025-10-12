@@ -17,12 +17,12 @@ def test_request(url: str, expected_result: str, expected_status_code: int):
     # URLErrorが発生した（レスポンスが無く、そもそも接続できなかった）場合はFalseでステータスコードがNoneとなる事。
     res = analyze.request(url)
 
-    assert type(res) is dict
-    assert res["result"] == expected_result
-    assert res["code"] == expected_status_code
-    assert res["url"] == url
-    if not res["result"]:
-        assert "reason" in res
+    assert type(res) is analyze.AnalyzeResponse
+    assert res.result == expected_result
+    assert res.code == expected_status_code
+    assert res.url == url
+    if res.result.upper() == "NG":
+        assert res.reason is not None
 
 
 def test_check_links():
@@ -35,17 +35,17 @@ def test_check_links():
 
     # 形式チェック
     for item in result:
-        assert "file" in item and item["file"] is not None
-        assert "line" in item and item["line"] is not None
-        assert "url" in item and item["url"] is not None
-        assert "result" in item and item["result"] is not None
-        assert "code" in item
+        assert item.file is not None
+        assert item.line is not None
+        assert item.url is not None
+        assert item.result is not None
 
-        if item["result"].upper() == "OK":
-            assert item["code"] is not None
+        if item.result.upper() == "OK":
+            assert item.code is not None
+            assert item.reason is None
         else:
-            assert item["code"] is None
-            assert "reason" in item and item["reason"] is not None
+            assert item.code is None
+            assert item.reason is not None
 
 
 @pytest.mark.parametrize(["path"], [pytest.param("tests/doc/")])
@@ -75,7 +75,7 @@ def test_extract_link():
     assert len(doc2_result) == 4
 
     # ちゃんと重複判定の数が正しいか、重複と見なしたリンクは想定しているものか
-    duplicated_link_list = [item for item in doc2_result if item["duplicate"]]
+    duplicated_link_list = [item for item in doc2_result if item.duplicate]
     assert len(duplicated_link_list) == 2
-    assert duplicated_link_list[0]["url"] == duplicated_link_list[1]["url"]
-    assert duplicated_link_list[0]["url"] == "https://example.com"
+    assert duplicated_link_list[0].url == duplicated_link_list[1].url
+    assert duplicated_link_list[0].url == "https://example.com"
