@@ -1,3 +1,4 @@
+import os
 import argparse
 from pathlib import Path
 from urllib.request import urlopen
@@ -70,19 +71,21 @@ def lookup_file(path: str, filter="*.md"):
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("src")
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("--verbose", action="store_true", help="Increase verbosity")
-    group.add_argument("--quiet", action="store_true", help="Decrease verbosity")
+    parser.add_argument("src", default=os.environ.get("SRC_DIR", "."))
+    parser.add_argument("--format", default=os.environ.get("OUTPUT_FORMAT", "CONSOLE"))
     return parser
 
 
 def main(args=None):
     parser = create_parser()
     parsed_args = parser.parse_args(args)
-    files = lookup_file(parsed_args.src)
+    src = parsed_args.src
+
+    files = lookup_file(src)
     links = extract_link(files)
     result = check_links(links)
+
+    print(result)
 
 
 if __name__ == "__main__":

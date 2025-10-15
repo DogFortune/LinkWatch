@@ -6,6 +6,14 @@ inputs:
   output-option:
     description: output format option
     required: false
+  src:
+    description: check directory
+    required: true
+    default: "."
 
 runs:
-  using: 
+  using: docker
+  image: Dockerfile
+  env:
+    SRC_DIR: ${{ inputs.src }}
+    OUTOUT_FORMAT: ${{ inputs.output-option }}
