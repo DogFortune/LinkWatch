@@ -12,9 +12,5 @@ class ReportData:
     reason: str
 
 
-def generate(data: ReportData, type: OutputType):
-    pass
-
-
-def console(data: ReportData):
+def console(data: list[ReportData]) -> str:
     line = ""

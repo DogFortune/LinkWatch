@@ -3,6 +3,14 @@ import analyzer
 import reporter
 import argparse
 from enums import OutputType
+from reporter import ReportData
+
+
+def __output(data: list[ReportData], format: OutputType):
+    match format:
+        case OutputType.Console:
+            line = reporter.console(data)
+            print(line)
 
 
 def __format__setting(format: str):
@@ -32,6 +40,7 @@ def main(args=None):
     files = analyzer.search(src)
     links = analyzer.extract_link(files)
     report_data_list = analyzer.check_links(links)
+    __output(report_data_list, format)
 
 
 if __name__ == "__main__":
