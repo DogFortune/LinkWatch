@@ -2,7 +2,7 @@ from pathlib import Path
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 from enums import Result
-from report import ReportData
+from reporter import ReportData
 import dataclasses
 
 

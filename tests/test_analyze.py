@@ -1,6 +1,6 @@
 import pytest
-import analyze
-from report import ReportData
+import analyzer
+from reporter import ReportData
 
 
 @pytest.mark.parametrize(
@@ -16,9 +16,9 @@ def test_request(url: str, expected_result: str, expected_status_code: int):
     # アクセスチェックした時に想定しているリクエストが返ってくる事。
     # 200系だけTrueで、それ以外はFalseで返ってくる事。
     # URLErrorが発生した（レスポンスが無く、そもそも接続できなかった）場合はFalseでステータスコードがNoneとなる事。
-    res = analyze.request(url)
+    res = analyzer.request(url)
 
-    assert type(res) is analyze.AnalyzeResponse
+    assert type(res) is analyzer.AnalyzeResponse
     assert res.result == expected_result
     assert res.code == expected_status_code
     assert res.url == url
@@ -27,9 +27,9 @@ def test_request(url: str, expected_result: str, expected_status_code: int):
 
 
 def test_check_links():
-    files = analyze.search("tests/doc/")
-    links = analyze.extract_link(files)
-    results_report_data = analyze.check_links(links)
+    files = analyzer.search("tests/doc/")
+    links = analyzer.extract_link(files)
+    results_report_data = analyzer.check_links(links)
 
     # 重複しているリンクは結果に含まれていない事（ドキュメントに記載されているリンクの数 - 重複しているリンクの数になっている事）
     assert len(results_report_data) == 3
@@ -52,7 +52,7 @@ def test_check_links():
 
 @pytest.mark.parametrize(["path"], [pytest.param("tests/doc/")])
 def test_search(path: str):
-    files = analyze.search(path)
+    files = analyzer.search(path)
     assert len(files) == 2
 
 
@@ -61,8 +61,8 @@ def test_extract_link():
     # データ構造としてはdictのKeyにファイルのパス、Valueにリンクに関する情報が入っている。
     # これは1ファイルの中に大量のリンクがあった時、すべてがフラットなリストだとファイル名を1つ1つ持つ事になるのでデータ量が増えてしまう。ファイル名は値として重複しやすいので、Keyという形で1つにまとめたのが理由。
     # 重複リンクにはフラグをつける。2つ目以降はFalseになるのでTrueのものだけリンクチェックすればOK
-    files = analyze.search("tests/doc/")
-    links = analyze.extract_link(files)
+    files = analyzer.search("tests/doc/")
+    links = analyzer.extract_link(files)
 
     assert len(links) == 2
 

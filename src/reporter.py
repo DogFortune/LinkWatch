@@ -1,4 +1,5 @@
 import dataclasses
+from enums import OutputType
 
 
 @dataclasses.dataclass
@@ -9,6 +10,10 @@ class ReportData:
     result: str
     code: int
     reason: str
+
+
+def generate(data: ReportData, type: OutputType):
+    pass
 
 
 def console(data: ReportData):

@@ -1,5 +1,6 @@
 import os
-import analyze
+import analyzer
+import reporter
 import argparse
 from enums import OutputType
 
@@ -28,9 +29,9 @@ def main(args=None):
     format = __format__setting(parsed_args.format)
     src = parsed_args.src
 
-    files = analyze.search(src)
-    links = analyze.extract_link(files)
-    report_data_list = analyze.check_links(links)
+    files = analyzer.search(src)
+    links = analyzer.extract_link(files)
+    report_data_list = analyzer.check_links(links)
 
 
 if __name__ == "__main__":
