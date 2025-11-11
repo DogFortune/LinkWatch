@@ -1,14 +1,14 @@
-import main
+import app
 import pytest
-import os
+from unittest.mock import patch
 
 
 class TestValid:
     """正常系"""
 
-    def test_main(self):
+    def test_main_with_minimal_arguments(self):
         """環境変数も引数も指定しない場合、コンソールモードで動作する事"""
-        main.main(["tests/doc/"])
+        app.main(["tests/doc/"])
 
     @pytest.mark.parametrize(
         ["format"],
@@ -17,16 +17,21 @@ class TestValid:
             pytest.param("console"),
         ],
     )
-    def test_format_args(self, format: str):
-        """フォーマット込みで行って最後まで完了する事。
+    def test_main_with_valid_command_line_arguments(self, format: str):
+        """フォーマット込みで行う一貫テスト。
 
         :param format: _description_
         :type format: str
         """
-        main.main(["--format", format, "tests/doc/"])
+        app.main(["--format", format, "tests/doc/"])
 
 
 class TestInValid:
+    @pytest.fixture
+    def setup_environ(self):
+        with patch.dict("os.environ", {"OUTPUT_FORMAT": "consol"}):
+            yield
+
     """異常系"""
 
     @pytest.mark.parametrize(
@@ -44,7 +49,7 @@ class TestInValid:
         :type format: str
         """
         with pytest.raises(NotImplementedError):
-            main.main(["--format", format, "tests/doc/"])
+            app.main(["--format", format, "tests/doc/"])
 
     @pytest.mark.parametrize(
         ["format"],
@@ -56,14 +61,14 @@ class TestInValid:
         :type format: str
         """
         with pytest.raises(ValueError):
-            main.main(["--format", format, "tests/doc/"])
+            app.main(["--format", format, "tests/doc/"])
 
+    @pytest.mark.usefixtures("setup_environ")
     def test_raise_format_args_use_environment(self):
         """環境変数でフォーマット指定をした時に適切ではない値が入っていた場合、例外発生。
 
         :param format: _description_
         :type format: str
         """
-        os.environ["OUTPUT_FORMAT"] = "consol"
         with pytest.raises(ValueError):
-            main.main(["tests/doc/"])
+            app.main(["tests/doc/"])

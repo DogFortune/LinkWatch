@@ -9,6 +9,7 @@ name = "pypi"
 pytest = "*"
 flake8 = "*"
 black = "*"
+pytest-randomly = "*"
 
 [requires]
 python_version = "3.13"
