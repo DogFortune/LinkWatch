@@ -1,6 +1,9 @@
 import reporter
 import analyzer
 from pprint import pprint as pp
+from tempfile import TemporaryDirectory
+from pathlib import Path
+import os
 
 
 class TestValid:
@@ -12,8 +15,7 @@ class TestValid:
         links = analyzer.extract_link(files)
         results_report_data = analyzer.check_links(links)
 
-        report = reporter.Console(results_report_data)
-        output_line = report.generate()
+        output_line = reporter.console(results_report_data)
 
         assert output_line is not None
 
@@ -21,3 +23,9 @@ class TestValid:
         files = analyzer.search("tests/sample_doc/")
         links = analyzer.extract_link(files)
         results_report_data = analyzer.check_links(links)
+        with TemporaryDirectory() as dir:
+            output_path = Path(dir, "result.json")
+
+            reporter.json_dump(results_report_data, output_path)
+
+            assert os.path.isfile(output_path) is True

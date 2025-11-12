@@ -9,8 +9,7 @@ from reporter import ReportData
 def __output(data: list[ReportData], format: OutputType):
     match format:
         case OutputType.Console:
-            report = reporter.Console(data)
-            line = report.generate()
+            line = reporter.console(data)
             print(line)
 
 
