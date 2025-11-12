@@ -5,6 +5,7 @@ from enums import Result
 from reporter import ReportData
 import dataclasses
 import re
+from tqdm import tqdm
 
 URL_PATTERN = r'https?://[^\s\)\]>"]+'
 URL_RE = re.compile(URL_PATTERN)
@@ -31,7 +32,7 @@ class LinkInfo:
 
 def request(url: str) -> AnalyzeResponse:
     try:
-        res = urlopen(url, timeout=5)
+        res = urlopen(url, timeout=3)
         return AnalyzeResponse(Result.OK, res.code, res.url, None)
     except HTTPError as e:
         # アクセスできて400や500系が来た時はこっち
@@ -45,14 +46,25 @@ def check_links(links: dict[str, LinkInfo]) -> list[ReportData]:
     # リンクをチェックします。
     # チェックすべきなのはFalseのものだけ。
     results = []
-    for file_path, link_items in links.items():
-        for item in link_items:
-            if not item.duplicate:
-                res = request(item.url)
-                data = ReportData(
-                    file_path, item.line, item.url, res.result, res.code, res.reason
-                )
-                results.append(data)
+    with tqdm(links.items()) as links_prog:
+        for file_path, link_items in links_prog:
+            links_prog.set_description(file_path)
+            with tqdm(link_items) as link_items_prog:
+                for item in link_items_prog:
+                    if not item.duplicate:
+                        res = request(item.url)
+                        data = ReportData(
+                            file_path,
+                            item.line,
+                            item.url,
+                            res.result,
+                            res.code,
+                            res.reason,
+                        )
+                        link_items_prog.set_description(
+                            f"url: {item.url} result: {res.result}"
+                        )
+                        results.append(data)
     return results
 
 
@@ -69,7 +81,7 @@ def extract_link(files: list) -> dict[str, LinkInfo]:
     links = {}
     seen_urls = set()
     for file_path in files:
-        with open(file_path, "r") as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             lines = f.read().splitlines()
             links[f"{file_path}"] = []
             for i, line in enumerate(lines):
