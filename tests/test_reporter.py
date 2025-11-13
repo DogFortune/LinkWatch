@@ -1,7 +1,6 @@
 import pytest
 import reporter
 import analyzer
-from pprint import pprint as pp
 from tempfile import TemporaryDirectory
 from pathlib import Path
 import os

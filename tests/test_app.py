@@ -2,8 +2,6 @@ import app
 import os
 from tempfile import TemporaryDirectory
 from pathlib import Path
-import pytest
-from unittest.mock import patch
 
 
 class TestValid:
@@ -20,12 +18,3 @@ class TestValid:
             app.main(["tests/sample_doc/", "--report-json", str(output_path)])
 
             assert os.path.isfile(output_path) is True
-
-
-class TestInValid:
-    @pytest.fixture
-    def setup_environ(self):
-        with patch.dict("os.environ", {"OUTPUT_FORMAT": "consol"}):
-            yield
-
-    """異常系"""
