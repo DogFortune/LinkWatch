@@ -6,11 +6,14 @@ from enums import OutputType
 from reporter import ReportData
 
 
-def __output(data: list[ReportData], format: OutputType):
+def __output(data: list[ReportData], format: OutputType, args):
     match format:
         case OutputType.Console:
             line = reporter.console(data)
             print(line)
+        case OutputType.Json:
+            output_path = args.report_json
+            reporter.dump_json(data, output_path)
 
 
 def __format__setting(args):
@@ -39,7 +42,7 @@ def main(args=None):
     files = analyzer.search(src)
     links = analyzer.extract_link(files)
     report_data_list = analyzer.check_links(links)
-    __output(report_data_list, format)
+    __output(report_data_list, format, parsed_args)
 
 
 if __name__ == "__main__":

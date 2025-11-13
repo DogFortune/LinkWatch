@@ -3,6 +3,7 @@ from dataclasses_json import dataclass_json
 from pprint import pformat
 from typing import List
 import json
+import os
 
 
 @dataclass_json
@@ -37,6 +38,8 @@ def console(data: list[ReportData]):
 
 
 def dump_json(data: list[ReportData], output_path: str):
+    if os.path.splitext(output_path)[-1].lower() != ".json":
+        raise ValueError
     collection = ReportCollection(Reports=data)
     json_str = json.dumps(
         collection.to_dict(), indent=4, ensure_ascii=False, cls=CustomEncoder
