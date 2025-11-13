@@ -1,6 +1,6 @@
 import pytest
-import reporter
-import analyzer
+from linkwatch import reporter
+from linkwatch import analyzer
 from tempfile import TemporaryDirectory
 from pathlib import Path
 import os

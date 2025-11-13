@@ -1,6 +1,6 @@
 import pytest
-import analyzer
-from reporter import ReportData
+from linkwatch import analyzer
+from linkwatch.reporter import ReportData
 
 
 @pytest.mark.parametrize(

@@ -1,4 +1,4 @@
-import app
+from linkwatch import app
 import os
 from tempfile import TemporaryDirectory
 from pathlib import Path

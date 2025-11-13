@@ -1,9 +1,9 @@
 import os
-import analyzer
-import reporter
+from . import analyzer
+from . import reporter
 import argparse
-from enums import OutputType
-from reporter import ReportData
+from .enums import OutputType
+from .reporter import ReportData
 
 
 def __output(data: list[ReportData], format: OutputType, args):

@@ -1,8 +1,8 @@
 from pathlib import Path
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
-from enums import Result
-from reporter import ReportData
+from linkwatch.enums import Result
+from linkwatch.reporter import ReportData
 from dataclasses import dataclass
 import re
 from tqdm import tqdm
