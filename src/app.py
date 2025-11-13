@@ -7,6 +7,15 @@ from reporter import ReportData
 
 
 def __output(data: list[ReportData], format: OutputType, args):
+    """出力
+
+    :param data: 確認結果リスト
+    :type data: list[ReportData]
+    :param format: 出力形式
+    :type format: OutputType
+    :param args: 結果
+    :type args:
+    """
     match format:
         case OutputType.Console:
             line = reporter.console(data)
@@ -16,7 +25,14 @@ def __output(data: list[ReportData], format: OutputType, args):
             reporter.dump_json(data, output_path)
 
 
-def __format__setting(args):
+def __format__setting(args) -> OutputType:
+    """結果の出力形式の設定
+
+    :param args: Arguments
+    :type args: _type_
+    :return: 出力形式
+    :rtype: OutputType
+    """
     if args.report_json:
         return OutputType.Json
     else:
@@ -40,7 +56,7 @@ def main(args=None):
     src = parsed_args.src
 
     files = analyzer.search(src)
-    links = analyzer.extract_link(files)
+    links = analyzer.extract_url(files)
     report_data_list = analyzer.check_links(links)
     __output(report_data_list, format, parsed_args)
 

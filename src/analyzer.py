@@ -3,7 +3,7 @@ from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 from enums import Result
 from reporter import ReportData
-import dataclasses
+from dataclasses import dataclass
 import re
 from tqdm import tqdm
 
@@ -11,7 +11,7 @@ URL_PATTERN = r'https?://[^\s\)\]>"]+'
 URL_RE = re.compile(URL_PATTERN)
 
 
-@dataclasses.dataclass
+@dataclass
 class AnalyzeResponse:
     """リンクにアクセスした結果"""
 
@@ -21,9 +21,9 @@ class AnalyzeResponse:
     reason: str | None
 
 
-@dataclasses.dataclass
-class LinkInfo:
-    """ドキュメントから抽出したリンク情報"""
+@dataclass
+class URLInfo:
+    """ドキュメントから抽出したURL情報"""
 
     line: int
     url: str
@@ -31,6 +31,13 @@ class LinkInfo:
 
 
 def request(url: str) -> AnalyzeResponse:
+    """疎通確認処理
+
+    :param url: 確認対象URL
+    :type url: str
+    :return: 結果
+    :rtype: AnalyzeResponse
+    """
     try:
         res = urlopen(url, timeout=3)
         return AnalyzeResponse(Result.OK, res.code, res.url, None)
@@ -42,9 +49,14 @@ def request(url: str) -> AnalyzeResponse:
         return AnalyzeResponse(Result.NG, None, url, e.reason)
 
 
-def check_links(links: dict[str, LinkInfo]) -> list[ReportData]:
-    # リンクをチェックします。
-    # チェックすべきなのはFalseのものだけ。
+def check_links(links: dict[str, URLInfo]) -> list[ReportData]:
+    """URLの疎通確認を行います。確認を行うのは重複していないものだけです。
+
+    :param links: URLリスト
+    :type links: dict[str, URLInfo]
+    :return: 確認結果
+    :rtype: list[ReportData]
+    """
     results = []
     with tqdm(links.items()) as links_prog:
         for file_path, link_items in links_prog:
@@ -64,18 +76,31 @@ def check_links(links: dict[str, LinkInfo]) -> list[ReportData]:
     return results
 
 
-def search(path: str, filter="*.md"):
-    # 指定したディレクトリから検査対象のファイルを抽出します。デフォルトはmdです。
+def search(path: str, filter="*.md") -> list:
+    """指定したディレクトリからMarkdownドキュメントを抽出します。
+
+    :param path: 検索対象
+    :type path: str
+    :param filter: _description_, defaults to "*.md"
+    :type filter: str, optional
+    :return: ファイルパスのリスト
+    :rtype: list
+    """
     p = Path(path)
     files = [str(item) for item in p.rglob(filter)]
     return files
 
 
-def extract_link(files: list) -> dict[str, LinkInfo]:
-    # 各ファイルからリンクを抽出します。
-    # 重複しているリンクはフラグがTrueになります。
+def extract_url(files: list) -> dict[str, URLInfo]:
+    """ファイルからURLを抽出します。
+
+    :param files: _description_
+    :type files: list
+    :return: _description_
+    :rtype: dict[str, LinkInfo]
+    """
     links = {}
-    seen_urls = set()
+    duplicated_urls = set()
     for file_path in files:
         with open(file_path, "r", encoding="utf-8") as f:
             lines = f.read().splitlines()
@@ -84,11 +109,11 @@ def extract_link(files: list) -> dict[str, LinkInfo]:
                 result = URL_RE.search(line)
                 if result:
                     url = result.group()
-                    if url in seen_urls:
+                    if url in duplicated_urls:
                         duplicate = True
                     else:
                         duplicate = False
-                        seen_urls.add(url)
-                    data = LinkInfo(i + 1, url, duplicate)
+                        duplicated_urls.add(url)
+                    data = URLInfo(i + 1, url, duplicate)
                     links[f"{file_path}"].append(data)
     return links

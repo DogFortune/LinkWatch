@@ -28,7 +28,7 @@ def test_request(url: str, expected_result: str, expected_status_code: int):
 
 def test_check_links():
     files = analyzer.search("tests/sample_doc/")
-    links = analyzer.extract_link(files)
+    links = analyzer.extract_url(files)
     results_report_data = analyzer.check_links(links)
 
     # 重複しているリンクは結果に含まれていない事（ドキュメントに記載されているリンクの数 - 重複しているリンクの数になっている事）
@@ -62,7 +62,7 @@ def test_extract_link():
     # これは1ファイルの中に大量のリンクがあった時、すべてがフラットなリストだとファイル名を1つ1つ持つ事になるのでデータ量が増えてしまう。ファイル名は値として重複しやすいので、Keyという形で1つにまとめたのが理由。
     # 重複リンクにはフラグをつける。2つ目以降はFalseになるのでTrueのものだけリンクチェックすればOK
     files = analyzer.search("tests/sample_doc/")
-    links = analyzer.extract_link(files)
+    links = analyzer.extract_url(files)
 
     assert len(links) == 2
 

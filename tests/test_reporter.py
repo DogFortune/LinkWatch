@@ -14,7 +14,7 @@ def setup_report_data():
     :rtype: _type_
     """
     files = analyzer.search("tests/sample_doc/")
-    links = analyzer.extract_link(files)
+    links = analyzer.extract_url(files)
     results_report_data = analyzer.check_links(links)
     return results_report_data
 
