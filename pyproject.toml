@@ -16,9 +16,12 @@ build-backend = "hatchling.build"
 linkwatch = "linkwatch.app:main"
 
 [project.urls]
-Homepage = "https://github.com/DogFortune/LinkWatch"
-Isues = "https://github.com/DogFortune/LinkWatch/issues"
+Source = "https://github.com/DogFortune/LinkWatch"
+Issues = "https://github.com/DogFortune/LinkWatch/issues"
 
 [tool.pytest.ini_options]
 pythonpath = "src"
 testpaths = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/linkwatch"]
