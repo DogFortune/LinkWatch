@@ -1,12 +1,21 @@
 [project]
 name = "linkwatch"
-authors = [{ name = "DogFortune" }]
+authors = [{ name = "DogFortune", email = "dogfortune.2000@gmail.com" }]
 description = "Perform connectivity checks on URLs listed in the Markdown"
 license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.10"
 version = "0.0.1"
 dependencies = ["tqdm", "dataclasses-json"]
+keywords = ["check", "url", "link"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Documentation",
+    "Topic :: Internet",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -16,8 +25,9 @@ build-backend = "hatchling.build"
 linkwatch = "linkwatch.app:main"
 
 [project.urls]
-Source = "https://github.com/DogFortune/LinkWatch"
+Repository = "https://github.com/DogFortune/LinkWatch"
 Issues = "https://github.com/DogFortune/LinkWatch/issues"
+Changelog = "https://github.com/DogFortune/LinkWatch/releases"
 
 [tool.pytest.ini_options]
 pythonpath = "src"
