@@ -1,4 +1,4 @@
-from linkwatch import app
+from linkstat import app
 import os
 from tempfile import TemporaryDirectory
 from pathlib import Path
