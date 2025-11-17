@@ -34,6 +34,7 @@ def test_request(url: str, expected_result: str, expected_status_code: int):
         pytest.param("tests/sample_doc/", 3),
         # 単体ファイル指定パターン
         pytest.param("tests/sample_doc/doc1.md", 1),
+        pytest.param("tests/sample_doc/doc2.md", 3),
     ],
 )
 def test_check_links(path: str, report_data_count: int):

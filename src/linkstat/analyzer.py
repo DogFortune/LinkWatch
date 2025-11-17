@@ -87,6 +87,8 @@ def search(path: str, filter="*.md") -> list:
     :rtype: list
     """
     p = Path(path)
+    if p.is_file():
+        return [str(p)]
     files = [str(item) for item in p.rglob(filter)]
     return files
 
