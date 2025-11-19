@@ -6,17 +6,25 @@
 _linkstat_ はドキュメントに記載されているリンクの疎通確認を行うスクリプトです。リンク切れの早期発見を行う事でドキュメントの健全性を保ちます。  
 現在対応しているのはMarkdownファイル（*.md）のみです。
 
-## インストールと使い方
-### インストール
+## インストール
 
 ```sh
 pip install linkstat
 ```
 
-### 使い方
+## 使い方
 
 ```sh
 linkstat {source_file_or_directory}
+```
+
+パスを指定しない場合はカレントディレクトリを検査対象とします。
+
+## 出力
+オプションを使用することでJSON形式のレポートを出力できます。
+
+```sh
+linkstat --report-json {path} {source_file_or_directory}
 ```
 
 ## コントリビュート

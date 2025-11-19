@@ -5,7 +5,7 @@ description = "Perform connectivity checks on URLs listed in the Markdown"
 license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.10"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = ["tqdm", "dataclasses-json"]
 keywords = ["check", "url", "link"]
 classifiers = [
@@ -35,3 +35,6 @@ testpaths = ["tests"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/linkstat"]
+
+[tool.hatch.publish.index]
+disable = true
