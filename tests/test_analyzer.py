@@ -13,6 +13,7 @@ from linkstat.reporter import ReportData
         pytest.param("http://127.0.0.1:800", "NG", None),
     ],
 )
+@pytest.mark.usefixtures("use_mock_server")
 def test_request(url: str, expected_result: str, expected_status_code: int):
     # アクセスチェックした時に想定しているリクエストが返ってくる事。
     # 200系だけTrueで、それ以外はFalseで返ってくる事。
