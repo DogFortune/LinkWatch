@@ -49,11 +49,11 @@ def request(url: str) -> AnalyzeResponse:
 
 
 def check_links(links: dict[str, URLInfo]) -> list[ReportData]:
-    """URLの疎通確認を行います。確認を行うのは重複していないものだけです。
+    """URLの疎通確認を行います。確認を行うのは重複していないものだけ。
 
     :param links: URLリスト
     :type links: dict[str, URLInfo]
-    :return: 確認結果
+    :return: 確認結果（重複したURLは除く）
     :rtype: list[ReportData]
     """
     results = []

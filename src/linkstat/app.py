@@ -19,7 +19,7 @@ def __output(data: list[ReportData], format: OutputType, args):
     """
     match format:
         case OutputType.Console:
-            line = reporter.console(data)
+            line = reporter.summary(data)
             print(line)
         case OutputType.Json:
             output_path = args.report_json

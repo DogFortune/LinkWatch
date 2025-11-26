@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
+from linkstat.enums import Result
 from pprint import pformat
 from typing import List
 import json
@@ -12,7 +13,7 @@ class ReportData:
     file: str
     line: int
     url: str
-    result: str
+    result: Result
     code: int
     reason: str
 
@@ -31,9 +32,19 @@ class CustomEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-def console(data: list[ReportData]):
-    # TODO: 出力形式は仮でpformatを設定中。
-    line = pformat(data)
+def summary(data: list[ReportData]):
+    """サマリーを出力します。
+    チェックしたURLの数、OK,NGの数、NGのものはURLを出す。
+
+    :param data: _description_
+    :type data: list[ReportData]
+    :return: _description_
+    :rtype: _type_
+    """
+    total_count = len(data)
+    ok_count = len([item for item in data if item.result == Result.OK])
+    ng_count = len([item for item in data if item.result == Result.NG])
+    line = f"Total: {total_count} OK: {ok_count} NG: {ng_count}"
     return line
 
 

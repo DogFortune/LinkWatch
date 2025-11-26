@@ -24,7 +24,7 @@ class TestValid:
 
     def test_console(self, setup_report_data):
         """コンソール出力テスト。文字列が想定している形である事"""
-        output_line = reporter.console(setup_report_data)
+        output_line = reporter.summary(setup_report_data)
 
         assert output_line is not None
 
