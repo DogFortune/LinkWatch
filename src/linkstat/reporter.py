@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
 from linkstat.enums import Result
-from pprint import pformat
 from typing import List
 import json
 import os
+import shutil
 
 
 @dataclass_json
@@ -42,9 +42,19 @@ def summary(data: list[ReportData]):
     :rtype: _type_
     """
     total_count = len(data)
-    ok_count = len([item for item in data if item.result == Result.OK])
-    ng_count = len([item for item in data if item.result == Result.NG])
-    line = f"Total: {total_count} OK: {ok_count} NG: {ng_count}"
+    ok_count = sum(item.result == Result.OK for item in data)
+    ng_items = [item for item in data if item.result == Result.NG]
+    summary = f" {total_count} Total, {ok_count} OK, {len(ng_items)} NG "
+
+    terminal_width = shutil.get_terminal_size().columns
+    if terminal_width < 40:
+        terminal_width = 80
+
+    total_fill = terminal_width - len(summary)
+    left_fill = total_fill // 2
+    right_fill = total_fill - left_fill
+
+    line = f"{"="*left_fill}{summary}{"="*right_fill}"
     return line
 
 
