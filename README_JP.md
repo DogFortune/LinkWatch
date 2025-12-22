@@ -3,15 +3,6 @@
 [![test-lint-format](https://github.com/DogFortune/linkstat/actions/workflows/lint-test-format.yml/badge.svg)](https://github.com/DogFortune/linkstat/actions/workflows/lint-test-format.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-<table>
-    <thead>
-        <tr>
-            <th style="text-align:center"><a href="README.md">English</a></th>
-            <th style="text-align:center">日本語</th>
-        </tr>
-    </thead>
-</table>
-
 _linkstat_ はドキュメントに記載されているリンクの疎通確認を行うスクリプトです。リンク切れの早期発見を行う事でドキュメントの健全性を保ちます。  
 現在対応しているのはMarkdownファイル（*.md）のみです。
 
