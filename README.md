@@ -30,8 +30,6 @@ pip install linkstat
 linkstat {source_file_or_directory}
 ```
 
-If no path is specified, the current directory will be scanned.
-
 ## Output
 
 You can output reports in JSON format by using the option.

@@ -30,8 +30,6 @@ pip install linkstat
 linkstat {source_file_or_directory}
 ```
 
-パスを指定しない場合はカレントディレクトリを検査対象とします。
-
 ## 出力
 オプションを使用することでJSON形式のレポートを出力できます。
 

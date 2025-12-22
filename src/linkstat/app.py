@@ -46,7 +46,7 @@ def __format_setting(args) -> OutputType:
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("src", default=os.environ.get("SRC_DIR", "."))
+    parser.add_argument("src")
     parser.add_argument(
         "--report-json", type=str, help="Create json report file at given path"
     )
