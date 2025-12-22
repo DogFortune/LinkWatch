@@ -60,7 +60,7 @@ def main(args=None):
     format = __format_setting(parsed_args)
     src = parsed_args.src
 
-    start_msg = reporter.session_start()
+    start_msg = reporter.fill_plain_message(" linkstat start ")
     print(start_msg)
     files = analyzer.search(src)
     links = analyzer.extract_url(files)

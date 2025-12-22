@@ -41,18 +41,17 @@ class Colors:
     RESET = "\033[0m"
 
 
-def session_start():
+def fill_plain_message(msg: str) -> str:
     fill_char = "="
-    message = " linkstat start "
     terminal_width = shutil.get_terminal_size(fallback=(80, 24)).columns
     if terminal_width < 40:
         terminal_width = 80
 
-    total_fill = terminal_width - len(message)
+    total_fill = terminal_width - len(msg)
     left_fill = total_fill // 2
     right_fill = total_fill - left_fill
 
-    start_message = f"{fill_char*left_fill}{message}{fill_char*right_fill}"
+    start_message = f"{fill_char*left_fill}{msg}{fill_char*right_fill}"
     return start_message
 
 
@@ -79,6 +78,7 @@ def summary(data: list[ReportData]):
     if (ng_count := len(ng_items)) == 0:
         fill_char = f"{Colors.GREEN}={Colors.RESET}"
     else:
+        print(fill_plain_message(" FAILURES "))
         ng_detail = "\n".join([f"{item.url}: {item.reason}" for item in ng_items])
         summary_message += f"{ng_detail}" + "\n"
         ng_part = f"{Colors.RED}{ng_count} NG{Colors.RESET}"
