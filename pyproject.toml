@@ -6,7 +6,7 @@ license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.10"
 version = "0.0.2"
-dependencies = ["tqdm", "dataclasses-json"]
+dependencies = ["dataclasses-json"]
 keywords = ["check", "url", "link"]
 classifiers = [
     "Development Status :: 3 - Alpha",
