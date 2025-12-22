@@ -19,7 +19,7 @@ def __output(data: list[ReportData], format: OutputType, args):
     """
     match format:
         case OutputType.Console:
-            line = reporter.summary(data)
+            line = reporter.get_summary_message(data)
             print(line)
         case OutputType.Json:
             output_path = args.report_json
@@ -60,7 +60,7 @@ def main(args=None):
     format = __format_setting(parsed_args)
     src = parsed_args.src
 
-    start_msg = reporter.fill_plain_message(" linkstat start ")
+    start_msg = reporter.get_fill_plain_message(" linkstat start ")
     print(start_msg)
     files = analyzer.search(src)
     links = analyzer.extract_url(files)

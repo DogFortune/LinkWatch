@@ -41,7 +41,15 @@ class Colors:
     RESET = "\033[0m"
 
 
-def fill_plain_message(msg: str) -> str:
+def get_fill_plain_message(msg: str) -> str:
+    """区切り線が入ったメッセージテキストを作成します。
+    メソッド自体はメッセージを作るだけで、出力は呼び出し側が行って下さい。
+
+    :param msg: _description_
+    :type msg: str
+    :return: _description_
+    :rtype: str
+    """
     fill_char = "="
     terminal_width = shutil.get_terminal_size(fallback=(80, 24)).columns
     if terminal_width < 40:
@@ -55,8 +63,8 @@ def fill_plain_message(msg: str) -> str:
     return start_message
 
 
-def summary(data: list[ReportData]):
-    """サマリーを作成します。
+def get_summary_message(data: list[ReportData]):
+    """レポート内容を元にサマリーを作成します。
     チェックしたURLの数、OK,NGの数、NGのものはURLを出す。
 
     :param data: _description_
@@ -78,7 +86,7 @@ def summary(data: list[ReportData]):
     if (ng_count := len(ng_items)) == 0:
         fill_char = f"{Colors.GREEN}={Colors.RESET}"
     else:
-        print(fill_plain_message(" FAILURES "))
+        print(get_fill_plain_message(" FAILURES "))
         ng_detail = "\n".join([f"{item.url}: {item.reason}" for item in ng_items])
         summary_message += f"{ng_detail}" + "\n"
         ng_part = f"{Colors.RED}{ng_count} NG{Colors.RESET}"

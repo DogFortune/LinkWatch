@@ -23,7 +23,7 @@ class TestValid:
 
     def test_summary(self, setup_report_data):
         """サマリー出力テスト。文字列が想定している形である事"""
-        output_line = reporter.summary(setup_report_data)
+        output_line = reporter.get_summary_message(setup_report_data)
 
         assert output_line is not None
         assert reporter.Colors.RED in output_line
@@ -36,7 +36,7 @@ class TestValid:
                 "path/to/doc1.md", 2, "https://example.com", enums.Result.OK, 200, None
             )
         )
-        summary_message = reporter.summary(results_report_data)
+        summary_message = reporter.get_summary_message(results_report_data)
 
         assert summary_message is not None
         assert "NG" not in summary_message
