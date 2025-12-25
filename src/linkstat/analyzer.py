@@ -1,5 +1,5 @@
 from pathlib import Path
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 from urllib.error import HTTPError, URLError
 from linkstat.enums import Result
 from linkstat.reporter import ReportData
@@ -37,8 +37,12 @@ def request(url: str) -> AnalyzeResponse:
     :return: 結果
     :rtype: AnalyzeResponse
     """
+    # User-Agentヘッダーを追加
+    headers = {"User-Agent": "Mozilla"}
+    req = Request(url, headers=headers)
+
     try:
-        with urlopen(url, timeout=3) as res:
+        with urlopen(req, timeout=5) as res:
             return AnalyzeResponse(Result.OK, res.code, res.url, None)
     except HTTPError as e:
         # アクセスできて400や500系が来た時はこっち
